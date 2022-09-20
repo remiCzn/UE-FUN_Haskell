@@ -1,4 +1,7 @@
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use foldr" #-}
 
 import Data.List
 
@@ -139,9 +142,7 @@ myNull (_ : _) = False
 
 --
 myNull' :: [Int] -> Bool
-myNull' x
-  | null x = True
-  | otherwise = False
+myNull' x = length x == 0
 
 myLength :: [Int] -> Int
 myLength [] = 0
@@ -149,7 +150,7 @@ myLength (_ : xs) = 1 + myLength xs
 
 myReverse :: [Int] -> [Int]
 myReverse [] = []
-myReverse (x : xs) = myAppend (myReverse xs) [x]
+myReverse (x : xs) = myReverse xs ++ [x]
 
 -- iteratif, comparer les complexites experimentalement
 myReverse' :: [Int] -> [Int]
@@ -157,33 +158,44 @@ myReverse' = undefined
 
 myConcat :: [[Int]] -> [Int]
 myConcat [] = []
-myConcat (x : xs) = myAppend x (myConcat xs)
+myConcat (x : xs) = x ++ myConcat xs
 
 myAnd :: [Bool] -> Bool
 myAnd [h] = h
 myAnd (h : t) = h && myAnd t
 
 myOr :: [Bool] -> Bool
-myOr = undefined
+myOr [h] = h
+myOr (h : t) = h || myOr t
 
 myProduct :: [Int] -> Int
-myProduct = undefined
+myProduct [] = 1
+myProduct (h : t) = h * myProduct t
 
 -- pas d'element neutre pour max et min
 
 myTake :: Int -> [Int] -> [Int]
-myTake = undefined
+myTake 0 list = []
+myTake n [] = []
+myTake n (t : q) = t : myTake (n -1) q
 
 myDrop :: Int -> [Int] -> [Int]
-myDrop = undefined
+myDrop 0 list = list
+myDrop n [] = []
+myDrop n (t : q) = myDrop (n - 1) q
 
 -- cette fonction existe sous le nom !!
 myBangBang :: [Int] -> Int -> Int
-myBangBang = undefined
+myBangBang (t : _) 0 = t
+myBangBang (_ : q) n = myBangBang q (n -1)
 
 -- liste deja triee
 myInsert :: Int -> [Int] -> [Int]
-myInsert = undefined
+myInsert x [] = [x]
+myInsert x (t : q)
+  | x > t = t : myInsert x q
+  | otherwise = x : t : q
 
 mySort :: [Int] -> [Int]
-mySort = undefined
+mySort [] = []
+mySort (t : q) = myInsert t (mySort q)
