@@ -154,23 +154,27 @@ myReverse (x : xs) = myReverse xs ++ [x]
 
 -- iteratif, comparer les complexites experimentalement
 myReverse' :: [Int] -> [Int]
-myReverse' = undefined
+myReverse' list = myReverse'' list []
+  where
+    myReverse'' :: [Int] -> [Int] -> [Int]
+    myReverse'' (x : xs) y = myReverse'' xs (x : y)
+    myReverse'' [] y = y
 
 myConcat :: [[Int]] -> [Int]
 myConcat [] = []
-myConcat (x : xs) = x ++ myConcat xs
+myConcat (t : q) = t ++ myConcat q
 
 myAnd :: [Bool] -> Bool
-myAnd [h] = h
-myAnd (h : t) = h && myAnd t
+myAnd [] = True
+myAnd (t : q) = t && myAnd q
 
 myOr :: [Bool] -> Bool
-myOr [h] = h
-myOr (h : t) = h || myOr t
+myOr [] = False
+myOr (t : q) = t || myOr q
 
 myProduct :: [Int] -> Int
 myProduct [] = 1
-myProduct (h : t) = h * myProduct t
+myProduct (t : q) = t * myProduct q
 
 -- pas d'element neutre pour max et min
 
@@ -183,6 +187,12 @@ myDrop :: Int -> [Int] -> [Int]
 myDrop 0 list = list
 myDrop n [] = []
 myDrop n (t : q) = myDrop (n - 1) q
+
+myDrop' :: Int -> [Int] -> [Int]
+myDrop' 0 list = list
+myDrop' n list
+  | null list = []
+  | otherwise = myDrop' (n -1) (tail list)
 
 -- cette fonction existe sous le nom !!
 myBangBang :: [Int] -> Int -> Int
