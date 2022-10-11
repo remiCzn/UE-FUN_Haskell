@@ -1,5 +1,6 @@
 {-# LANGUAGE InstanceSigs #-}
 
+import Control.Exception (AsyncException (StackOverflow))
 import Data.List
 import Data.Ord
 
@@ -258,6 +259,7 @@ instance Eq Op where
   (==) Sub Sub = True
   (==) Div Div = True
   (==) _ _ = False
+  (/=) a b = not (a == b)
 
 test7 = App Add (Val 1) (App Mul (Val 2) (Val 3))
 
